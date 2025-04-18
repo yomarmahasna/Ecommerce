@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5" [formGroup]="cartForm">
+  <h2 class="mb-4">Shopping Cart</h2>
+
+  <!-- إذا كانت السلة تحتوي على عناصر -->
+  <div *ngIf="items.length > 0; else emptyCart">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Product</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <!-- استخدام FormArray لعرض عناصر السلة -->
+        <tbody formArrayName="items">
+          <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+            <td>
+              <img [src]="item.get('image')?.value" class="cart-img" [alt]="item.get('title')?.value">
+            </td>
+            <td>{{ item.get('title')?.value }}</td>
+            <td>${{ item.get('price')?.value.toFixed(2) }}</td>
+            <td>
+              <input type="number" class="form-control" formControlName="quantity" min="1" style="width:80px;"
+                     (change)="updateQuantity(i)">
+            </td>
+            <td>${{ (item.get('price')?.value * item.get('quantity')?.value).toFixed(2) }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeItem(i)">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Special Notes باستخدام Reactive Forms -->
+    <div class="mb-4">
+      <label for="specialNotes" class="form-label">Special Notes</label>
+      <textarea class="form-control" id="specialNotes" rows="3" placeholder="Add any special instructions here..."
+                formControlName="specialNotes"></textarea>
+    </div>
+
+    <!-- إجمالي السلة والأزرار -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+      <h4>Total: <span class="text-success">${{ totalPrice.toFixed(2) }}</span></h4>
+      <div>
+        <button class="btn btn-secondary me-2" (click)="continueShopping()">Continue Shopping</button>
+        <button class="btn btn-primary" (click)="checkout()">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- رسالة إذا كانت السلة فارغة -->
+  <ng-template #emptyCart>
+    <p>Your shopping cart is empty.</p>
+  </ng-template>
+</div>
+
+<app-footer></app-footer>

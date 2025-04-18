@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Customer Support</h2>
+
+  <section class="mb-5">
+    <h4>Frequently Asked Questions</h4>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>How can I track my order?</strong><br>
+        You can use the order tracking tool below to check your order status.
+      </li>
+      <li class="list-group-item">
+        <strong>What is your return policy?</strong><br>
+        You can return products within 14 days of delivery. Terms apply.
+      </li>
+      <li class="list-group-item">
+        <strong>How can I contact customer service?</strong><br>
+        Use the contact form below or email us directly.
+      </li>
+    </ul>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="mb-5">
+    <h4>Contact Us</h4>
+    <form>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Your Name" required>
+        </div>
+        <div class="col-md-6">
+          <input type="email" class="form-control" placeholder="Your Email" required>
+        </div>
+        <div class="col-12">
+          <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary">Submit Request</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Contact Information -->
+  <section class="mb-5">
+    <h4>Get in Touch</h4>
+    <p><strong>Phone:</strong> +962 6 533 7756</p>
+    <p><strong>Email:</strong> <a href="mailto:support@myshop.com">support!myshop.com</a></p>
+  </section>
+
+  <!-- Order Tracking Tool -->
+  <section class="mb-5">
+    <h4>Track Your Order</h4>
+    <form class="row g-3">
+      <div class="col-md-8">
+        <input type="text" class="form-control" placeholder="Enter your Order Number">
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-outline-secondary w-100">Track Order</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Legal Links -->
+  <section class="text-center mt-5">
+    <a href="/terms" class="text-decoration-none me-3">Terms of Service</a>
+    <a href="/privacy" class="text-decoration-none">Privacy Policy</a>
+  </section>
+</div>
+
+<app-footer></app-footer>

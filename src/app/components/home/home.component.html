@@ -1,0 +1,37 @@
+<app-navbar></app-navbar>
+
+<!-- Hero Banner -->
+<section class="hero-banner d-flex align-items-center">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <h1 class="display-4 fw-bold">Mega Sale</h1>
+    <p class="lead">Special discounts on the latest products</p>
+    <a routerLink="#" class="btn btn-primary btn-lg">Shop Now</a>
+  </div>
+</section>
+
+<!-- Popular Products -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="mb-4">Popular Products</h2>
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let product of products">
+        <div class="card h-100 shadow-sm">
+          <img [src]="product.image" class="card-img-top" [alt]="product.title">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{product.title}}</h5>
+            <p class="card-text mb-4">{{product.description | slice:0:80}}...</p>
+            <div class="mt-auto">
+              <h6 class="fw-bold">${{product.price}}</h6>
+              <button class="btn btn-primary w-100 mt-2"
+                [routerLink]="['/product', product.id]">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

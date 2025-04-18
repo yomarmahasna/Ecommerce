@@ -1,0 +1,13 @@
+.product-image {
+  max-height: 500px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.product-info {
+  padding: 20px;
+  /* يمكن تقليل حجم الخط أو تعديل الهوامش حسب الحاجة */
+}
+.related-products {
+  margin-top: 60px; /* زيادة المسافة لضمان ظهور القسم */
+}

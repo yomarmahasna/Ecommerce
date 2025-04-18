@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+<form [formGroup]="wishlistForm">
+  <div class="table-responsive" *ngIf="items.length > 0; else emptyWishlist">
+    <table class="table align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Product</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="items">
+        <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+          <td>
+            <img [src]="item.get('image')?.value" class="wishlist-img" [alt]="item.get('title')?.value">
+          </td>
+          <td>{{ item.get('title')?.value }}</td>
+          <td>${{ item.get('price')?.value.toFixed(2) }}</td>
+          <td>
+            <input type="number" class="form-control" formControlName="quantity" min="1" style="width:80px;" (change)="updateQuantity(i, $event)">
+          </td>
+          <td>
+            <button type="button" class="btn btn-success btn-sm me-2" (click)="moveToCart(i)">Move to Cart</button>
+            <button type="button" class="btn btn-danger btn-sm mt-2" (click)="removeItem(i)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #emptyWishlist>
+    <p>Your wishlist is empty.</p>
+  </ng-template>
+</form>
+<app-footer></app-footer>
