@@ -1,3 +1,4 @@
+import { HomeComponent } from './components/home/home.component';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -30,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/user-management/user-management.component').then(m => m.UserManagementComponent)
   },
   {
+    path: 'hom',
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+  },
+  {
     path: 'auth/signup',
     loadComponent: () => import('./components/auth/signup/signup.component').then(m => m.SignupComponent)
   },
@@ -40,6 +45,14 @@ export const routes: Routes = [
     {
     path: 'product/:id',
     loadComponent: () => import('./components/product-details/product-details.component').then(m => m.ProductDetailsComponent)
+  },
+  {
+    path: 'Category',
+    loadComponent: () => import('./components/category/category.component').then(m => m.CategoryComponent)
+  },
+  {
+    path: 'sr',
+    loadComponent: () => import('./components/searchresults/searchresults.component').then(m => m.SearchResultsComponent)
   },
     {
     path: 'shopping-cart',
@@ -84,6 +97,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () => import('./components/auth/signup/signup.component').then(m => m.SignupComponent)
-  },  { path: '**', redirectTo: '/auth/signup' },
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+  },
+   { path: '**', redirectTo: '/home' },
 ];

@@ -20,7 +20,7 @@ export class ProductDetailsComponent implements OnInit {
   product: any;
   relatedProducts: any[] = [];
   addedToWishlist: boolean = false;
-
+  query = '';
   constructor(
     private route: ActivatedRoute,
     private ProductsService: ProductsService,
@@ -30,6 +30,10 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.query = params['q'] || '';
+      // now reload your products based on this.query…
+    });
     this.productId = this.route.snapshot.paramMap.get('id')!;
     this.getProductDetails(this.productId);
     this.getRelatedProducts();

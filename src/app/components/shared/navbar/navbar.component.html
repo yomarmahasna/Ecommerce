@@ -6,8 +6,41 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container">
+            <a class="navbar-brand" routerLink="/">MyShop</a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <!-- put the search form BEFORE your links -->
+              <form class="d-flex me-auto"
+                    (ngSubmit)="onSearch()"
+                    #searchForm="ngForm">
+                <input class="form-control me-2"
+                       type="search"
+                       placeholder="Search…"
+                       name="q"
+                       [(ngModel)]="searchTerm"
+                       required>
+                <button class="btn btn-outline-light"
+                        type="submit"
+                        [disabled]="!searchForm.valid">
+                  Go
+                </button>
+              </form>
+
+              <ul class="navbar-nav ms-auto">
+                <!-- your other nav-items here… -->
+              </ul>
+            </div>
+          </div>
+        </nav>
         <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="Category">Categories</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="'/support'">Contact Us</a>
