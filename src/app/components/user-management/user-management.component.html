@@ -1,0 +1,109 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>User Management</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">Create New User</button>
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#changeRoleModal" (click)="selectUser(user)">Change Role</button>
+          <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal" (click)="selectUser(user)">Change Password</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Create User Modal -->
+  <div class="modal fade" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="createForm" (ngSubmit)="createUser()">
+          <div class="modal-header">
+            <h5 class="modal-title">Create New User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Role</label>
+              <select class="form-select" formControlName="role">
+                <option *ngFor="let role of roles">{{ role }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Role Modal -->
+  <div class="modal fade" id="changeRoleModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="roleForm" (ngSubmit)="changeUserRole()">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Role</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label">Select Role</label>
+            <select class="form-select" formControlName="role">
+              <option *ngFor="let role of roles">{{ role }}</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="roleForm.invalid" class="btn btn-warning">Change</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" formControlName="password">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="passwordForm.invalid" class="btn btn-secondary">Change</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,34 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'dashboard',
+    loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'UserManagment',
+    loadComponent: () => import('./components/category-management/category-management.component').then(m => m.CategoryManagementComponent)
+  },
+  {
+    path: 'CustomerManagment',
+    loadComponent: () => import('./components/customer-management/customer-management.component').then(m => m.CustomerManagementComponent)
+  },
+  {
+    path: 'brandManagment',
+    loadComponent: () => import('./components/brand-management/brand-management.component').then(m => m.BrandManagementComponent)
+  },
+  {
+    path: 'orderManagment',
+    loadComponent: () => import('./components/order-management/order-management.component').then(m => m.OrderManagementComponent)
+  },
+  {
+    path: 'ProductManagment',
+    loadComponent: () => import('./components/product-management/product-management.component').then(m => m.ProductManagementComponent)
+  },
+  {
+    path: 'categoryManagment',
+    loadComponent: () => import('./components/user-management/user-management.component').then(m => m.UserManagementComponent)
+  },
+  {
     path: 'auth/signup',
     loadComponent: () => import('./components/auth/signup/signup.component').then(m => m.SignupComponent)
   },
@@ -56,6 +84,6 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./components/auth/signup/signup.component').then(m => m.SignupComponent)
   },  { path: '**', redirectTo: '/auth/signup' },
 ];

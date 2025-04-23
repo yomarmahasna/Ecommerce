@@ -1,0 +1,116 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Product Management</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" (click)="openProductModal()">Add New Product</button>
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Availability</th>
+        <th>Last Modified Date</th>
+        <th>Last Modified By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.id }}</td>
+        <td>{{ product.nameEn }}</td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.brand }}</td>
+        <td>
+          <span class="badge" [ngClass]="product.isAvailable ? 'bg-success' : 'bg-secondary'">
+            {{ product.isAvailable ? 'In Stock' : 'Out of Stock' }}
+          </span>
+        </td>
+        <td>{{ product.lastModifiedDate }}</td>
+        <td>{{ product.lastModifiedBy }}</td>
+        <td>
+          <button class="btn btn-sm btn-info">View</button>
+          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#productModal"
+                  (click)="openProductModal(product)">Edit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Edit Product</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Name (EN)</label>
+                <input type="text" class="form-control" formControlName="nameEn">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Name (AR)</label>
+                <input type="text" class="form-control" formControlName="nameAr">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Description (EN)</label>
+                <textarea class="form-control" formControlName="descriptionEn"></textarea>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Description (AR)</label>
+                <textarea class="form-control" formControlName="descriptionAr"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-control" formControlName="price">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Tax Percentage (%)</label>
+                <input type="number" class="form-control" formControlName="taxPercentage">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" formControlName="category">
+                  <option *ngFor="let cat of categories">{{ cat }}</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Brand</label>
+                <select class="form-select" formControlName="brand">
+                  <option *ngFor="let brand of brands">{{ brand }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Images</label>
+              <input type="file" class="form-control" multiple>
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" formControlName="isAvailable">
+              <label class="form-check-label">Availability (In Stock)</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="productForm.invalid" class="btn btn-primary">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
