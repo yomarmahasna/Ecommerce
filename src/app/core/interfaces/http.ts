@@ -65,6 +65,21 @@ export interface Product {
   lastModifiedDate: string;
   lastModifiedBy: string;
 }
+export interface MyProduct {
+  id: number;
+  name: string;
+  nameAr: string | null;
+  descriptionEn: string;
+  descriptionAr: string | null;
+  price: number;
+  taxPercentage: number;
+  availabilityStatusId: number;
+  categoryId: number;
+  brandId: number;
+  isActive: boolean;
+  creationDate: string;      // أو Date
+  imageUrl: string;          // ← هذا ضروري
+}
 export interface Customer {
   id: number;
   name: string;
@@ -87,4 +102,27 @@ export interface Brand {
   nameAr: string;
   imageUrl: string;
   isActive: boolean;
+}
+
+export interface RegisterDto {
+  id:               number;
+  name:             string;
+  isActive:         boolean;
+  creationDate:     string;
+  email:            string;
+  password:         string;
+  roleId:           number;
+  phone:            string;
+  address:          string;
+  customerStatusId: number;
+}
+
+export interface LoginDto {
+  email:    string;
+  password: string;
+}
+
+export interface LoginResponse  {
+  token: string;
+  // أو أي بيانات أخرى يعيدها السيرفر
 }

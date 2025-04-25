@@ -16,6 +16,7 @@ import { CartService } from '../../core/service/cart.service';
   templateUrl: './product-details.component.html',
 })
 export class ProductDetailsComponent implements OnInit {
+  readonly defaultImage = 'https://via.placeholder.com/400x300?text=No+Image';
   productId!: string;
   product: any;
   relatedProducts: any[] = [];
@@ -52,7 +53,7 @@ export class ProductDetailsComponent implements OnInit {
   getProductDetails(id: string): void {
     this.ProductsService.getDetails(id).subscribe({
       next: (res) => {
-        this.product = res.product;
+        this.product = res;
       },
       error: (err) => console.log(err),
     });
@@ -61,7 +62,7 @@ export class ProductDetailsComponent implements OnInit {
   getRelatedProducts(): void {
     this.ProductsService.allProducts().subscribe({
       next: (res) => {
-        this.relatedProducts = res.products ;
+        this.relatedProducts = res ;
       },
       error: (err) => console.log(err),
     });

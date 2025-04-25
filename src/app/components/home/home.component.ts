@@ -23,11 +23,14 @@ export class HomeComponent implements OnInit {
     this.productService.allProducts().subscribe({
       next: (data) => {
         // Limit products for demonstration
-        this.products = data.products;
+        console.log(`product is ${this.products}`)
+        this.products = data;
+
       },
       error: (err) => {
         console.log('Error fetching products:', err);
       }
     });
   }
+
 }

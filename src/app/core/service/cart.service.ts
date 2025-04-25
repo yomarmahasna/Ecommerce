@@ -25,9 +25,7 @@ export class CartService {
       cart.push(product);
       localStorage.setItem('cartState', JSON.stringify(cart));
       this.countOfCart.next(cart.length);
-    } else {
-      // this._notifecationsService.showError('error', 'is item is added');
-    }
+    } 
   }
 
   isAddedToCart(product: IProducts): boolean {

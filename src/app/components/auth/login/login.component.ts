@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { LoginDto, LoginResponse } from '../../../core/interfaces/http';
 
 @Component({
   selector: 'app-login',
@@ -27,17 +28,24 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (res) => {
-          localStorage.setItem('token', res.token);  // تأكد من أن response يحتوي على token
-          alert('Login successful! Redirecting to your account...');
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          alert('Invalid email or password!');
-        }
-      });
+    if (this.loginForm.invalid) return;
+    const { email,password } = this.loginForm.value;
+    const payload: LoginDto = {
+      email,
+      password,
     }
+
+    this.authService.login(payload).subscribe({
+      next: (res: string) => {
+        // احفظ التوكن ووجّه المستخدم
+        localStorage.setItem('token', res);
+        this.router.navigate(['/home']);
+        console.log("successed")
+      },
+      // error: (e) => {
+      //   alert(e);
+      // }
+    });
   }
-}
+  }
+

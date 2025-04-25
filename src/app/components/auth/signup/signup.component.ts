@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { RegisterDto } from '../../../core/interfaces/http';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +17,7 @@ export class SignupComponent implements OnInit {
   strengthMessage: string = '';
   strengthClass: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(private fb: FormBuilder, private authService: AuthService,private router: Router) {}
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
@@ -44,11 +45,30 @@ export class SignupComponent implements OnInit {
   }
 
   onSignup(): void {
-    if (this.signupForm.valid) {
-      this.authService.register(this.signupForm.value).subscribe({
-        next: () => alert('Verification email sent! Please check your inbox to activate your account.'),
-        error: (error) => alert('An error occurred: ' + error.message),
-      });
-    }
+    if (this.signupForm.invalid) return console.log("ojnvipjvbisvdvib");
+
+    const { firstName, lastName, email, phone, password } = this.signupForm.value;
+
+    const payload: RegisterDto = {
+      id:               0,
+      name:             `${firstName} ${lastName}`,
+      isActive:         true,
+      creationDate:     new Date().toISOString(),
+      email,
+      password,
+      roleId:           0,
+      phone,
+      address:          '',
+      customerStatusId: 0
+    };
+
+    this.authService.register(payload).subscribe({
+      next: (msg: string) =>
+
+      this.router.navigate(['/auth/login']),
+
+      error: err =>
+        alert('An error occurred: ' + (err.error?.message || err.message))
+    });
   }
 }

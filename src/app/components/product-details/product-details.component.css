@@ -1,8 +1,12 @@
-.product-image {
-  max-height: 500px;
-  object-fit: cover;
-  width: 100%;
-}
+
+  .product-image {
+    display: block;           /* يتصرّف كعنصر بلوك */
+    width: 100%;              /* يملأ عرض البطاقة */
+    height: 180px;            /* ارتفاع ثابت، غيّره حسب الرغبة */
+    object-fit: cover;        /* يملأ الإطار مع اقتصاص الزوائد */
+    object-position: center;  /* يركّز على منتصف الصورة */
+  }
+
 
 .product-info {
   padding: 20px;
@@ -10,4 +14,40 @@
 }
 .related-products {
   margin-top: 60px; /* زيادة المسافة لضمان ظهور القسم */
+}
+
+
+
+.related-products .related-card {
+  /* تزيل h-100 وتُعطي حدًّا أقصى للارتفاع */
+  max-height: 350px;        /* غيّره حسب ما يناسب تصميمك */
+  display: flex;
+  flex-direction: column;
+}
+
+/* إطار لصورة ثابت الارتفاع */
+.related-products .image-wrapper {
+  height: 180px;
+  min-height: 150px;           /* ارتفاع الصورة */
+  overflow: hidden;
+}
+
+/* ضبط الصورة داخل الإطار */
+.related-products .image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* الجسم يبقى طبيعيًا، يمدّده المحتوى */
+.related-products .card-body {
+  flex: 1;                   /* يملأ المساحة المتبقية داخل الكارد */
+  display: flex;
+  flex-direction: column;
+}
+
+/* يدفع الزر لأسفل دون أن يمدد الكارد لأكثر من max-height */
+.related-products .card-body .btn {
+  margin-top: auto;
 }

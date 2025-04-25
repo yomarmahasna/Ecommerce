@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 export class ProductsService {
   constructor(private _httpClient: HttpClient) {}
   allProducts(): Observable<any> {
-    return this._httpClient.get(`https://fakestoreapi.in/api/products`);
+    return this._httpClient.get(`https://localhost:44378/api/Product/GetAllProduct`);
   }
 
   getDetails(id: string): Observable<any> {
-    return this._httpClient.get(`https://fakestoreapi.in/api/products/${id}`);
+    return this._httpClient.get(`https://localhost:44378/api/Product/GetProductById/${id}`);
   }
 }

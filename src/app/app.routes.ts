@@ -96,7 +96,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/staticpage/copyright/copyright.component').then(m => m.CopyrightComponent)
   },
   {
-    path: '',
+    path: 'home',
     loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
   },
    { path: '**', redirectTo: '/home' },
