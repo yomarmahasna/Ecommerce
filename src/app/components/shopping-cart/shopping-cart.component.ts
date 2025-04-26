@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
-import { IProducts } from '../../core/interfaces/http';
+import { MyProduct } from '../../core/interfaces/http';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -39,17 +39,17 @@ export class ShoppingCartComponent implements OnInit {
   // جلب بيانات السلة وبناء FormGroup لكل عنصر
   loadCartItems(): FormGroup[] {
     const storedCart = localStorage.getItem('cartState');
-    const products: IProducts[] = storedCart ? JSON.parse(storedCart) : [];
+    const products: MyProduct[] = storedCart ? JSON.parse(storedCart) : [];
     return products.map(product => {
       if (!product.quantity) {
         product.quantity = 1;
       }
       return this.fb.group({
         id: [product.id],
-        title: [product.title],
+        title: [product.name],
         price: [product.price],
         quantity: [product.quantity],
-        image: [product.image]
+        image: [product.imageUrl]
       });
     });
   }

@@ -6,7 +6,7 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { IProducts } from '../../core/interfaces/http';
+import { MyProduct } from '../../core/interfaces/http';
 import { CartService } from '../../core/service/cart.service';
 
 @Component({
@@ -39,10 +39,10 @@ export class ProductDetailsComponent implements OnInit {
     this.getProductDetails(this.productId);
     this.getRelatedProducts();
   }
-  addToCart(product: IProducts): void {
+  addToCart(product: MyProduct): void {
     this.cartService.addToCart(product);
   }
-  addToWishlist(product: IProducts): void {
+  addToWishlist(product: MyProduct): void {
     if (!this.addedToWishlist) {
       this.wishlistService.addToWishlist(product);
       this.addedToWishlist = true;

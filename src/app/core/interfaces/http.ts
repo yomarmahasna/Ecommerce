@@ -1,5 +1,5 @@
 export interface IProducts {
-  id: string;
+  id: number;
   title: string;
   image: string;
   price: number;
@@ -73,12 +73,15 @@ export interface MyProduct {
   descriptionAr: string | null;
   price: number;
   taxPercentage: number;
+  quantity:number;
   availabilityStatusId: number;
   categoryId: number;
   brandId: number;
   isActive: boolean;
   creationDate: string;      // أو Date
-  imageUrl: string;          // ← هذا ضروري
+  imageUrl: string;      // ← هذا ضروري
+  isAddedToCart: boolean;
+  isAddedToWishlist:boolean;
 }
 export interface Customer {
   id: number;
@@ -125,4 +128,68 @@ export interface LoginDto {
 export interface LoginResponse  {
   token: string;
   // أو أي بيانات أخرى يعيدها السيرفر
+}
+export interface OrderDto {
+  id:                  number;
+  name:                string;
+  orderNumber:         string;
+  deliveryDate:        string;
+  totalPrice:          number;
+  orderStatusId:       number;
+  shippingCity:        string;
+  shippingStreet:      string;
+  shippingBuildingNumber: string;
+  customerId:          number;
+  rating:              number;
+  feedback:            string;
+}
+
+export interface OrderDetailDto {
+  name:          string;
+  isActive:      boolean;
+  creationDate:  string;
+  orderId:       number;
+  productId:     number;
+  unitPrice:     number;
+  quantity:      number;
+  netPrice:      number;
+}
+export interface UserDto {
+  id: number;
+  name: string;
+  email: string;
+  isActive: boolean;
+}
+
+export interface UpdateUserDto {
+  id: number;
+  name: string;
+  email: string;
+  isActive: boolean;
+  creationDate: string;      // ISO string: مثلاً new Date().toISOString()
+  password: string;
+  roleId: number;
+  phone: string;
+  address: string;
+  customerStatusId: number;
+}export interface CreateBrandDto {
+  id: number;
+  name: string;
+  nameAr: string;
+  imageUrl?: string;
+  isActive: boolean;
+  creationDate: string;
+}
+
+export interface UpdateBrandDto extends CreateBrandDto {
+
+}
+
+export interface Brand {
+  id: number;
+  nameAr: string;
+  name: string;
+  imageUrl: string;
+  isActive: boolean;
+  creationDate: string;
 }

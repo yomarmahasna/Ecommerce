@@ -1,73 +1,120 @@
 import { Component, OnInit } from '@angular/core';
-import { Brand } from '../../core/interfaces/http';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BrandService } from '../../core/service/brand.service';
+import { Brand, CreateBrandDto, UpdateBrandDto } from '../../core/interfaces/http';
 import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
+import { time } from 'node:console';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-brand-management',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AdminNavbarComponent],
-  templateUrl: './brand-management.component.html'
+  templateUrl: './brand-management.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    AdminNavbarComponent]
 })
 export class BrandManagementComponent implements OnInit {
   brands: Brand[] = [];
   brandForm!: FormGroup;
   selectedBrand: Brand | null = null;
+  loading = false;
+  error: string | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private brandService: BrandService
+  ) {}
 
   ngOnInit(): void {
-    this.brands = [
-      {
-        id: 1,
-        nameEn: 'Samsung',
-        nameAr: 'سامسونج',
-        imageUrl: 'https://via.placeholder.com/60',
-        isActive: true
-      }
-    ];
-
     this.initForm();
+    this.loadBrands();
   }
 
-  initForm() {
+  private initForm(): void {
     this.brandForm = this.fb.group({
-      nameEn: ['', Validators.required],
-      nameAr: ['', Validators.required],
+      nameEn:   ['', Validators.required],
+      nameAr:   ['', Validators.required],
       imageUrl: [''],
       isActive: [true]
     });
   }
 
-  openBrandModal(brand?: Brand) {
+  /** يجلب كل الماركات من الـ API */
+  loadBrands(): void {
+    this.loading = true;
+    this.brandService.getAllBrand().subscribe({
+      next: data => {
+        this.brands = data;
+        this.loading = false;
+      },
+      error: err => {
+        console.error(err);
+        this.error = 'فشل جلب الماركات';
+        this.loading = false;
+      }
+    });
+  }
+
+  /** يفتح المودال للإضافة أو التعديل */
+  openBrandModal(brand?: Brand): void {
+    this.error = null;
     if (brand) {
       this.selectedBrand = brand;
-      this.brandForm.patchValue({ ...brand });
+      this.brandForm.patchValue(brand);
     } else {
       this.selectedBrand = null;
-      this.brandForm.reset({ isActive: true });
+      this.brandForm.reset({ isActive: true, nameEn: '', nameAr: '', imageUrl: '' });
     }
   }
 
-  saveBrand() {
-    const formValue = this.brandForm.value;
+  /** يرسل الطلب المناسب للإنشاء أو التحديث */
+  saveBrand(): void {
+    if (this.brandForm.invalid) return;
 
+    const v = this.brandForm.value;
     if (this.selectedBrand) {
-      const index = this.brands.findIndex(b => b.id === this.selectedBrand!.id);
-      this.brands[index] = {
-        ...this.selectedBrand,
-        ...formValue
+      const dto: UpdateBrandDto = {
+        id:        this.selectedBrand.id,
+        name:    v.nameEn,
+        nameAr:    v.nameAr,
+        imageUrl:  v.imageUrl,
+        isActive:  v.isActive,
+        creationDate: new Date().toISOString()
       };
+      this.brandService.updateBrand(dto.id, dto).subscribe({
+        next: () => {
+          // نحدث العنصر في الذاكرة ليظهر التعديل فوراً
+          Object.assign(this.selectedBrand!, dto);
+        },
+        error: err => {
+          console.error(err);
+          this.error = 'فشل تحديث الماركة';
+        }
+      });
     } else {
-      const newBrand: Brand = {
-        id: this.brands.length + 1,
-        ...formValue,
-        imageUrl: formValue.imageUrl || 'https://via.placeholder.com/60'
-      };
-      this.brands.push(newBrand);
-    }
+      const dto: CreateBrandDto = {
+        id : v.id ,
+        name:   v.nameEn,
+        nameAr:   v.nameAr,
+        imageUrl: v.imageUrl,
+        isActive: v.isActive,
+        creationDate: new Date().toISOString()
 
-    this.brandForm.reset({ isActive: true });
+      };
+      this.brandService.createBrand(dto).subscribe({
+        next: newBrand => {
+          this.brands.push(newBrand);
+        },
+        error: err => {
+          console.error(err);
+          this.error = 'فشل إنشاء الماركة';
+        }
+      });
+    }
   }
 }

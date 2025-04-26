@@ -1,20 +1,20 @@
 // wishlist.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IProducts } from '../interfaces/http';
+import {MyProduct } from '../interfaces/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WishlistService {
   wishlistCount: BehaviorSubject<number> = new BehaviorSubject(
-    (JSON.parse(localStorage.getItem('wishlistState') ?? '[]') as IProducts[]).length
+    (JSON.parse(localStorage.getItem('wishlistState') ?? '[]') as MyProduct[]).length
   );
 
 
-  addToWishlist(product: IProducts): void {
+  addToWishlist(product: MyProduct): void {
     const storedWishlist = localStorage.getItem('wishlistState');
-    const wishlist: IProducts[] = storedWishlist ? JSON.parse(storedWishlist) : [];
+    const wishlist: MyProduct[] = storedWishlist ? JSON.parse(storedWishlist) : [];
 
     if (!wishlist.some(item => item.id === product.id)) {
       product.isAddedToWishlist = true;
@@ -24,15 +24,15 @@ export class WishlistService {
     }
   }
 
-  removeFromWishlist(product: IProducts): void {
+  removeFromWishlist(product: MyProduct): void {
     const storedWishlist = localStorage.getItem('wishlistState');
-    let wishlist: IProducts[] = storedWishlist ? JSON.parse(storedWishlist) : [];
+    let wishlist: MyProduct[] = storedWishlist ? JSON.parse(storedWishlist) : [];
     wishlist = wishlist.filter(item => item.id !== product.id);
     localStorage.setItem('wishlistState', JSON.stringify(wishlist));
     this.wishlistCount.next(wishlist.length);
   }
 
-  getWishlist(): IProducts[] {
+  getWishlist(): MyProduct[] {
     const storedWishlist = localStorage.getItem('wishlistState');
     return storedWishlist ? JSON.parse(storedWishlist) : [];
   }

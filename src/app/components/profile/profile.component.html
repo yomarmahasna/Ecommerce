@@ -3,63 +3,136 @@
 <div class="container my-5">
   <h2 class="mb-4">My Profile</h2>
 
-  <!-- نموذج الملف الشخصي الموحد -->
-  <form [formGroup]="profileForm">
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfileChanges()">
     <div class="row">
-      <!-- العمود الأيسر: المعلومات الشخصية وتغيير كلمة المرور -->
+      <!-- Left column: Personal Info & Change Password -->
       <div class="col-md-6">
-        <!-- المعلومات الشخصية -->
         <h4>Personal Information</h4>
         <div formGroupName="personalInfo">
           <div class="mb-3">
             <label class="form-label">First Name</label>
-            <input type="text" class="form-control" formControlName="firstName" required>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="firstName"
+            />
+            <div
+              *ngIf="
+                personalInfo.get('firstName')?.touched &&
+                personalInfo.get('firstName')?.invalid
+              "
+              class="text-danger"
+            >
+              First name is required
+            </div>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" formControlName="lastName" required>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+            />
+            <div
+              *ngIf="
+                personalInfo.get('lastName')?.touched &&
+                personalInfo.get('lastName')?.invalid
+              "
+              class="text-danger"
+            >
+              Last name is required
+            </div>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Email Address</label>
-            <input type="email" class="form-control" formControlName="email" required>
-          </div>
-        </div>
-        <button type="button" class="btn btn-primary mb-3" (click)="saveProfileChanges()">Save Changes</button>
-
-        <hr>
-
-        <!-- تغيير كلمة المرور -->
-        <h4 class="mt-4">Change Password</h4>
-        <div formGroupName="passwordInfo">
-          <div class="mb-3">
-            <label class="form-label">Current Password</label>
-            <input type="password" class="form-control" formControlName="currentPassword" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">New Password</label>
-            <input type="password" class="form-control" formControlName="newPassword" required>
-          </div>
-        </div>
-        <button type="button" class="btn btn-secondary mb-3" (click)="saveProfileChanges()">Change Password</button>
-      </div>
-
-      <!-- العمود الأيمن: دفتر العناوين -->
-      <div class="col-md-6">
-        <h4>Address Book</h4>
-        <div formArrayName="addresses">
-          <div *ngFor="let addressCtrl of addresses.controls; let i = index" [formGroupName]="i" class="mb-3">
-            <input type="text" class="form-control" formControlName="address" placeholder="Enter address">
-            <div class="mt-2">
-              <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAddress(i)">Delete</button>
+            <input
+              type="email"
+              class="form-control"
+              formControlName="email"
+            />
+            <div
+              *ngIf="
+                personalInfo.get('email')?.touched &&
+                personalInfo.get('email')?.invalid
+              "
+              class="text-danger"
+            >
+              A valid email is required
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-success btn-sm" (click)="addAddress()">+ Add New Address</button>
+
+        <button type="submit" class="btn btn-primary mb-4">
+          Save Personal Info
+        </button>
+
+        <hr />
+
+        <h4>Change Password</h4>
+        <div formGroupName="passwordInfo">
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="currentPassword"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="newPassword"
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">
+          Change Password
+        </button>
+      </div>
+
+      <!-- Right column: Address Book -->
+      <div class="col-md-6">
+        <h4>Address Book</h4>
+        <div formArrayName="addresses">
+          <div
+            *ngFor="let addr of addresses.controls; let i = index"
+            [formGroupName]="i"
+            class="mb-3 d-flex align-items-start"
+          >
+            <input
+              type="text"
+              class="form-control me-2"
+              formControlName="address"
+              placeholder="Enter address"
+            />
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="removeAddress(i)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-success btn-sm mb-3"
+          (click)="addAddress()"
+        >
+          + Add New Address
+        </button>
       </div>
     </div>
   </form>
 
-  <!-- سجل الطلبات -->
+  <!-- Order History -->
   <div class="mt-5">
     <h4>Order History</h4>
     <table class="table">
@@ -68,23 +141,22 @@
           <th>Order #</th>
           <th>Date</th>
           <th>Total</th>
-          <th>Details</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let order of orderHistory">
+          <!-- إذا حقل التاريخ في DTO باسم مختلف: مثلا order.deliveryDate -->
           <td>{{ order.orderNumber }}</td>
-          <td>{{ order.date }}</td>
-          <td>${{ order.total.toFixed(2) }}</td>
-          <td><button class="btn btn-sm btn-info">View</button></td>
+          <td>{{ order.deliveryDate | date:'mediumDate' }}</td>
+          <td>${{ order.totalPrice.toFixed(2) }}</td>
+        </tr>
+        <tr *ngIf="orderHistory.length === 0">
+          <td colspan="4" class="text-center text-muted">
+            No orders found.
+          </td>
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <!-- زر حفظ التعديلات الشامل -->
-  <div class="mt-4">
-    <button type="button" class="btn btn-primary" (click)="saveProfileChanges()">Save All Changes</button>
   </div>
 </div>
 

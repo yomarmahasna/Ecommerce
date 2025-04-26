@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
-import { IProducts } from '../../core/interfaces/http';
+import { MyProduct } from '../../core/interfaces/http';
 
 @Component({
   selector: 'app-wishlist',
@@ -32,7 +32,7 @@ export class WishlistComponent implements OnInit {
   }
 
   loadWishlist(): void {
-    const storedWishlist: IProducts[] = JSON.parse(localStorage.getItem('wishlistState') || '[]');
+    const storedWishlist: MyProduct[] = JSON.parse(localStorage.getItem('wishlistState') || '[]');
     const data = localStorage.getItem('wishlistState');
     console.log("Wishlist data from localStorage:", data);
 
@@ -47,12 +47,12 @@ export class WishlistComponent implements OnInit {
     });
   }
 
-  createWishlistItem(item: IProducts): FormGroup {
+  createWishlistItem(item: MyProduct): FormGroup {
     return this.fb.group({
       id: [item.id],
-      title: [item.title],
+      title: [item.name],
       price: [item.price],
-      image: [item.image],
+      image: [item.imageUrl],
       quantity: [item.quantity, [Validators.required, Validators.min(1)]]
     });
   }
@@ -71,7 +71,7 @@ export class WishlistComponent implements OnInit {
 
   removeItem(index: number): void {
     const itemGroup = this.items.at(index);
-    const product: IProducts = itemGroup.value;
+    const product: MyProduct = itemGroup.value;
     this.items.removeAt(index);
     this.saveWishlist();
     this.wishlistService.wishlistCount.next(this.items.length);
@@ -80,9 +80,9 @@ export class WishlistComponent implements OnInit {
 
   moveToCart(index: number): void {
     const itemGroup = this.items.at(index);
-    const product: IProducts = itemGroup.value;
-    this.wishlistService.removeFromWishlist(product);
+    const product: MyProduct = itemGroup.value;
     this.cartService.addToCart(product);
+    this.wishlistService.removeFromWishlist(product);
     this.items.removeAt(index);
     this.saveWishlist();
   }
