@@ -31,7 +31,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/user-management/user-management.component').then(m => m.UserManagementComponent)
   },
   {
-    path: 'hom',
+    path: 'home',
     loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
   },
   {

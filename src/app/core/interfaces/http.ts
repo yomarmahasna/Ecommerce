@@ -15,21 +15,8 @@ export interface IProducts {
   isAddedToWishlist:boolean;
 }
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
-export interface Category {
-  id: number;
-  nameEn: string;
-  nameAr: string;
-  descriptionEn: string;
-  descriptionAr: string;
-  imageUrl: string;
-  isActive: boolean;
-}
+
+
 export interface OrderItem {
   productName: string;
   unitPrice: number;
@@ -62,8 +49,8 @@ export interface Product {
   brand: string;
   images: string[]; // URLs أو أسماء ملفات
   isAvailable: boolean;
-  lastModifiedDate: string;
-  lastModifiedBy: string;
+  // lastModifiedDate: string;
+  // lastModifiedBy: string;
 }
 export interface MyProduct {
   id: number;
@@ -173,7 +160,7 @@ export interface UpdateUserDto {
   address: string;
   customerStatusId: number;
 }export interface CreateBrandDto {
-  id: number;
+  // id: number;
   name: string;
   nameAr: string;
   imageUrl?: string;
@@ -182,7 +169,7 @@ export interface UpdateUserDto {
 }
 
 export interface UpdateBrandDto extends CreateBrandDto {
-
+  id: number;
 }
 
 export interface Brand {
@@ -192,4 +179,122 @@ export interface Brand {
   imageUrl: string;
   isActive: boolean;
   creationDate: string;
+}
+///////////////////////////////////////////////////////////////////////
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  isActive: boolean;
+  creationDate: string;    // ISO string
+  roleId: number;          // 0 = Customer, 1 = Admin
+  customerStatusId: number;
+}
+
+export interface CreateUserDto {
+  id: number;             // عند الإنشاء: 0
+  name: string;
+  isActive: boolean;      // true
+  creationDate: string;   // مثال: new Date().toISOString()
+  email: string;
+  password: string;
+  roleId: number;
+  phone: string;
+  address: string;
+  customerStatusId: number;       // add this field if your backend needs it
+}
+
+export interface ChangePasswordDto {
+  userId: number;
+  newPasswordHash: string;
+}
+
+export interface AssignRoleDto {
+  userId: number;
+  roleId: number;
+}
+export interface OrderManagment {
+  id: number;
+  name: string;
+  orderNumber: string;
+  deliveryDate: string;         // ISO string
+  totalPrice: number;
+  orderStatusId: number;        // كود الحالة
+  shippingCity: string;
+  shippingStreet: string;
+  shippingBuildingNumber: string;
+
+  customerId: number;
+  rating: number;
+  feedback: string;
+  // الخاصية status نصيّة فقط للعرض في الـ UI
+  status?: string;
+  // لو تحتاج تعرض تفاصيل الأصناف بعد جلبها من باك-إند
+  items?: {
+    productName: string;
+    unitPrice: number;
+    quantity: number;
+    netPrice: number;
+  }[];
+//عشان اقدر اشبك اليوز مع الاوردر
+    customerName?: string;
+    customerPhone?: string;
+    orderDate?: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;           // maps to “name” in payload
+  isActive: boolean;
+  creationDate: string;   // ISO string
+  nameAR: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  imageUrl: string;
+}
+
+// This is the exact payload shape for Create & Update:
+export interface CategoryDto {
+  id: number;             // 0 on Create, existing id on Update
+  name: string;
+  isActive: boolean;
+  creationDate: string;
+  nameAR: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  imageUrl: string;
+}
+export interface Product {
+  id: number;
+  name: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  price: number;
+  taxPercentage: number;
+  categoryId: number;
+  brandId: number;
+  images: string[];              // URLs
+  availabilityStatusId: number;  // 1=in stock, 0=out of stock, etc.
+  lastModifiedDate: string;      // ISO
+  lastModifiedBy: string;
+}
+
+// -- Payload shape for Create/Update
+export interface ProductDto {
+  id: number;                    // 0 for create
+  name: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  price: number;
+  creationDate : string;
+  taxPercentage: number;
+  categoryId: number;
+  brandId: number;
+  isActive:boolean;
+  availabilityStatusId : number,
+  imageUrl: string;
 }

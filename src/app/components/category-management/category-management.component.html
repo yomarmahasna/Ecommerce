@@ -1,9 +1,13 @@
 <app-admin-navbar></app-admin-navbar>
+
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Categories Management</h2>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal"
-            (click)="selectedCategory = null; categoryForm.reset({ isActive: true })">
+    <button
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#categoryModal"
+      (click)="openModalForNew()">
       Add New Category
     </button>
   </div>
@@ -17,26 +21,43 @@
         <th>Description (EN)</th>
         <th>Description (AR)</th>
         <th>Image</th>
-        <th>Is Active</th>
+        <th>Active</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let category of categories">
-        <td>{{ category.id }}</td>
-        <td>{{ category.nameEn }}</td>
-        <td>{{ category.nameAr }}</td>
-        <td>{{ category.descriptionEn }}</td>
-        <td>{{ category.descriptionAr }}</td>
-        <td><img [src]="category.imageUrl" class="img-thumbnail" width="60"></td>
+      <tr *ngFor="let c of categories">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.nameAR }}</td>
+        <td>{{ c.descriptionEn }}</td>
+        <td>{{ c.descriptionAr }}</td>
+        <td><img [src]="c.imageUrl" class="img-thumbnail" width="60" /></td>
         <td>
-          <span class="badge" [ngClass]="category.isActive ? 'bg-success' : 'bg-secondary'">
-            {{ category.isActive ? 'Active' : 'Inactive' }}
+          <span
+            class="badge"
+            [ngClass]="c.isActive ? 'bg-success' : 'bg-secondary'">
+            {{ c.isActive ? 'Active' : 'Inactive' }}
           </span>
         </td>
         <td>
-          <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#categoryModal"
-                  (click)="selectCategoryForEdit(category)">Edit</button>
+          <button
+            class="btn btn-sm btn-warning me-1"
+            data-bs-toggle="modal"
+            data-bs-target="#categoryModal"
+            (click)="selectCategoryForEdit(c)">
+            Edit
+          </button>
+          <button
+            class="btn btn-sm btn-outline-secondary me-1"
+            (click)="toggleActive(c)">
+            {{ c.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="deleteCategory(c)">
+            Delete
+          </button>
         </td>
       </tr>
     </tbody>
@@ -48,41 +69,81 @@
       <div class="modal-content">
         <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
           <div class="modal-header">
-            <h5 class="modal-title">Add/Edit Category</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <h5 class="modal-title">
+              {{ selectedCategory ? 'Edit' : 'Add New' }} Category
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal">
+            </button>
           </div>
+
           <div class="modal-body">
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label class="form-label">Name (English)</label>
-                <input type="text" class="form-control" formControlName="nameEn">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nameEn" />
               </div>
               <div class="mb-3 col-md-6">
                 <label class="form-label">Name (Arabic)</label>
-                <input type="text" class="form-control" formControlName="nameAr">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nameAr" />
               </div>
             </div>
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label class="form-label">Description (English)</label>
-                <textarea class="form-control" formControlName="descriptionEn"></textarea>
+                <textarea
+                  class="form-control"
+                  formControlName="descriptionEn">
+                </textarea>
               </div>
               <div class="mb-3 col-md-6">
                 <label class="form-label">Description (Arabic)</label>
-                <textarea class="form-control" formControlName="descriptionAr"></textarea>
+                <textarea
+                  class="form-control"
+                  formControlName="descriptionAr">
+                </textarea>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Image URL</label>
-              <input type="text" class="form-control" formControlName="imageUrl">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="imageUrl" />
             </div>
             <div class="form-check form-switch mb-3">
-              <input class="form-check-input" type="checkbox" formControlName="isActive" id="isActive">
-              <label class="form-check-label" for="isActive">Is Active</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                formControlName="isActive"
+                id="isActive" />
+              <label class="form-check-label" for="isActive">
+                Is Active
+              </label>
             </div>
           </div>
+
           <div class="modal-footer">
-            <button type="submit" [disabled]="categoryForm.invalid" class="btn btn-primary">Save Category</button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="categoryForm.invalid">
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Cancel
+            </button>
           </div>
         </form>
       </div>

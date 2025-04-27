@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OrderDetailDto, OrderDto } from '../interfaces/http';
+import { OrderDetailDto, OrderDto, OrderManagment, User } from '../interfaces/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,6 +10,10 @@ export class OrderService {
   private baseUrl = 'https://localhost:44378/api/Order';
 
   constructor(private http: HttpClient) {}
+
+  getAllOrders(): Observable<OrderManagment[]> {
+    return this.http.get<OrderManagment[]>(`${this.baseUrl}/GetAllOrders`);
+  }
 
   // 1) تنشئ الطلب، ونُعلم Angular أن الردّ نص (وليس JSON)
   createOrder(dto: OrderDto): Observable<string> {
@@ -26,7 +30,9 @@ export class OrderService {
       `${this.baseUrl}/GetOrderByOrderNumber/${orderNumber}`
     );
   }
-
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/GetUserById/${id}`);
+  }
   // 3) دوال تفاصيل الطلب تبقى كما هي
   createOrderDetail(dto: OrderDetailDto): Observable<void> {
     return this.http.post<void>(
@@ -40,4 +46,33 @@ export class OrderService {
     const url = `${this.baseUrl}/GetOrdersByCustomerId/${customerId}`;
     return this.http.get<OrderDto[]>(url);
   }
+
+  updateOrder(id: number, order: OrderManagment): Observable<OrderManagment> {
+    return this.http.put<OrderManagment>(
+      `${this.baseUrl}/UpdateOrder/${id}`,
+      order
+    );
+  }
+
+  cancelOrder(id: number): Observable<void> {
+    return this.http.put<void>(
+      `${this.baseUrl}/CancelOrder/${id}`,
+      null
+    );
+  }
+
+  confirmOrder(id: number): Observable<void> {
+    return this.http.put<void>(
+      `${this.baseUrl}/ConfirmOrder/${id}`,
+      null
+    );
+  }
+
+  deliverOrder(id: number): Observable<void> {
+    return this.http.put<void>(
+      `${this.baseUrl}/DeliverOrder/${id}`,
+      null
+    );
+  }
+
 }

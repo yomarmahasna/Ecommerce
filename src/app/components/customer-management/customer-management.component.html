@@ -10,89 +10,77 @@
         <th>Name</th>
         <th>Phone</th>
         <th>Email</th>
-        <th>Last Order Date</th>
-        <th>Last Login Date</th>
+        <th>Address</th>
+        <th>Created</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let customer of customers">
-        <td>{{ customer.id }}</td>
-        <td>{{ customer.name }}</td>
-        <td>{{ customer.phone }}</td>
-        <td>{{ customer.email }}</td>
-        <td>{{ customer.lastOrderDate }}</td>
-        <td>{{ customer.lastLoginDate }}</td>
+      <tr *ngFor="let c of customers">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.address }}</td>
+        <td>{{ c.creationDate | date:'yyyy-MM-dd' }}</td>
         <td>
-          <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#customerModal"
-                  (click)="openCustomerModal(customer)">View</button>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-success': c.isActive,
+              'bg-danger':  !c.isActive
+            }">
+            {{ c.isActive ? 'Active' : 'Banned' }}
+          </span>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-info"
+            data-bs-toggle="modal"
+            data-bs-target="#customerModal"
+            (click)="openCustomerModal(c)">
+            View
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Modal -->
+  <!-- Customer Detail Modal -->
   <div class="modal fade" id="customerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content" *ngIf="selectedCustomer">
         <div class="modal-header">
-          <h5 class="modal-title">Customer Details</h5>
+          <h5 class="modal-title">Customer #{{ selectedCustomer.id }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <!-- Info -->
           <div class="row mb-3">
             <div class="col-md-4"><strong>Name:</strong> {{ selectedCustomer.name }}</div>
             <div class="col-md-4"><strong>Phone:</strong> {{ selectedCustomer.phone }}</div>
             <div class="col-md-4"><strong>Email:</strong> {{ selectedCustomer.email }}</div>
           </div>
-
-          <!-- Addresses -->
           <div class="mb-3">
-            <h6>Addresses</h6>
-            <ul class="list-group">
-              <li class="list-group-item" *ngFor="let address of selectedCustomer.addresses">{{ address }}</li>
-            </ul>
+            <strong>Address:</strong> {{ selectedCustomer.address }}
           </div>
-
-          <!-- Orders -->
           <div class="mb-3">
-            <h6>Order History</h6>
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Order #</th>
-                  <th>Order Date</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
-                  <th>Delivery Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let order of selectedCustomer.orders">
-                  <td><a href="#" class="link-primary">{{ order.orderNumber }}</a></td>
-                  <td>{{ order.orderDate }}</td>
-                  <td>${{ order.totalPrice }}</td>
-                  <td>
-                    <span class="badge"
-                          [ngClass]="{
-                            'bg-success': order.status === 'Delivered',
-                            'bg-primary': order.status === 'New',
-                            'bg-danger': order.status === 'Cancelled'
-                          }">
-                      {{ order.status }}
-                    </span>
-                  </td>
-                  <td>{{ order.deliveryDate }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <strong>Customer Status ID:</strong> {{ selectedCustomer.customerStatusId }}
           </div>
         </div>
-
         <div class="modal-footer">
-          <button class="btn btn-danger" (click)="banCustomer()">Ban Account</button>
-          <button class="btn btn-success" (click)="activateCustomer()">Activate Account</button>
+          <button
+            class="btn btn-danger"
+            [disabled]="!selectedCustomer?.isActive"
+            (click)="banCustomer()">
+            Ban Account
+          </button>
+          <button
+            class="btn btn-success"
+            [disabled]="selectedCustomer?.isActive"
+            (click)="activateCustomer()">
+            Activate Account
+          </button>
           <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>

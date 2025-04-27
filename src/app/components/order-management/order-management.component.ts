@@ -1,95 +1,120 @@
-import { CommonModule } from '@angular/common';
+// src/app/admin/order-management/order-management.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Order } from '../../core/interfaces/http';
-import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { AdminNavbarComponent } from '../admin-navbar/admin-navbar.component';
+import { Order, OrderManagment } from '../../core/interfaces/http';
+import { OrderService } from '../../core/service/order.service';
+import { UserService } from '../../core/service/user.service';
 
 @Component({
   selector: 'app-order-management',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AdminNavbarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AdminNavbarComponent
+  ],
   templateUrl: './order-management.component.html'
 })
 export class OrderManagementComponent implements OnInit {
-  orders: Order[] = [];
-  selectedOrder: Order | null = null;
+  orders: OrderManagment[] = [];
+  selectedOrder: OrderManagment | null = null;
   orderForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private orderService: OrderService,
+    private userService :UserService
+  ) {}
 
   ngOnInit(): void {
-    this.orders = [
-      {
-        id: 1,
-        orderNumber: 'ORD-1001',
-        customerName: 'Jane Smith',
-        customerPhone: '+962 7 1234 5678',
-        orderDate: '2025-04-17',
-        deliveryDate: '2025-04-20',
-        status: 'New',
-        shippingAddress: 'Amman – Queen Rania Street – Building No.21',
-        customerNotes: '',
-        feedback: '',
-        items: [
-          { productName: 'Smartphone XYZ', unitPrice: 499, quantity: 1, netPrice: 499 },
-          { productName: 'Earbuds ABC', unitPrice: 50, quantity: 1, netPrice: 50 }
-        ]
-      }
-    ];
-
-    this.initOrderForm();
+    this.initForm();
+    this.loadOrders();
   }
 
-  initOrderForm() {
+  private initForm() {
     this.orderForm = this.fb.group({
-      status: [''],
       deliveryDate: [''],
-      customerNotes: ['']
+      // اختياري: لو حاب تضيف تعديل الحالة برسميّاً
+      orderStatusId: ['']
     });
   }
 
-  openOrderModal(order: Order) {
-    this.selectedOrder = order;
+  private loadOrders() {
+    this.orderService.getAllOrders().subscribe({
+      next: data => {
+        this.orders = data;
+        // لكل طلب، جلب بيانات الزبون
+        this.orders.forEach(o => {
+          this.userService.getUserById(o.customerId).subscribe(u => {
+            o.customerName  = u.name;
+            o.customerPhone = u.phone;
+            // إذا كان API يعيد تاريخ الطلب:
+            o.orderDate     =  o.deliveryDate;
+          });
+        });
+      },
+      error: err => console.error('Load orders failed', err)
+    });
+  }
+
+  getTotal(order: OrderManagment): number {
+    if (!order.items) return order.totalPrice;
+    return order.items.reduce((sum, item) => sum + item.netPrice, 0);
+  }
+
+  openOrderModal(order: OrderManagment) {
+    this.selectedOrder = { ...order };
     this.orderForm.patchValue({
-      status: order.status,
       deliveryDate: order.deliveryDate,
-      customerNotes: order.customerNotes || ''
+      orderStatusId: order.orderStatusId
     });
-  }
-
-  updateOrderStatus() {
-    if (this.selectedOrder) {
-      const index = this.orders.findIndex(o => o.id === this.selectedOrder!.id);
-      if (index !== -1) {
-        this.orders[index] = {
-          ...this.selectedOrder,
-          ...this.orderForm.value
-        };
-      }
-    }
-  }
-
-  confirmOrder() {
-    if (this.selectedOrder) {
-      this.orderForm.patchValue({ status: 'Confirmed' });
-      this.updateOrderStatus();
-    }
   }
 
   cancelOrder() {
-    if (this.selectedOrder) {
-      this.orderForm.patchValue({ status: 'Cancelled' });
-      this.updateOrderStatus();
-    }
+    if (!this.selectedOrder) return;
+    this.orderService.cancelOrder(this.selectedOrder.id).subscribe({
+      next: () => {
+        this.selectedOrder!.status = 'Cancelled';
+        this.selectedOrder!.orderStatusId = 3; // مثال
+      },
+      error: err => console.error('Cancel failed', err)
+    });
+  }
+
+  confirmOrder() {
+    if (!this.selectedOrder) return;
+    this.orderService.confirmOrder(this.selectedOrder.id).subscribe({
+      next: () => {
+        this.selectedOrder!.status = 'Confirmed';
+        this.selectedOrder!.orderStatusId = 2; // مثال
+      },
+      error: err => console.error('Confirm failed', err)
+    });
+  }
+
+  deliverOrder() {
+    if (!this.selectedOrder) return;
+    this.orderService.deliverOrder(this.selectedOrder.id).subscribe({
+      next: () => {
+        this.selectedOrder!.status = 'Delivered';
+        this.selectedOrder!.orderStatusId = 4; // مثال
+      },
+      error: err => console.error('Deliver failed', err)
+    });
   }
 
   removeItem(index: number) {
-    if (this.selectedOrder) {
+    if (this.selectedOrder && this.selectedOrder.items) {
       this.selectedOrder.items.splice(index, 1);
     }
   }
 
-  getTotal(order: Order): number {
-    return order.items.reduce((sum, item) => sum + item.netPrice, 0);
-  }
 }

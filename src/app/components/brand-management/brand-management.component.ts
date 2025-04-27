@@ -98,7 +98,7 @@ export class BrandManagementComponent implements OnInit {
       });
     } else {
       const dto: CreateBrandDto = {
-        id : v.id ,
+        // id : v.id ,
         name:   v.nameEn,
         nameAr:   v.nameAr,
         imageUrl: v.imageUrl,

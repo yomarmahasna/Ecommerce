@@ -1,57 +1,65 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Customer } from '../../core/interfaces/http';
-import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
+import { HttpClientModule } from '@angular/common/http';
+import { AdminNavbarComponent } from '../admin-navbar/admin-navbar.component';
+import { User } from '../../core/interfaces/http';
+import { UserService } from '../../core/service/user.service';
 
 @Component({
   selector: 'app-customer-management',
   standalone: true,
-  imports: [CommonModule, AdminNavbarComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    AdminNavbarComponent
+  ],
   templateUrl: './customer-management.component.html'
 })
-export class CustomerManagementComponent {
-  customers: Customer[] = [
-    {
-      id: 1,
-      name: 'Ahmad Ali',
-      phone: '+962 7 9876 5432',
-      email: 'ahmad@example.com',
-      lastOrderDate: '2025-04-15',
-      lastLoginDate: '2025-04-17',
-      addresses: [
-        'Amman – Queen Rania Street – Building No.21',
-        'Zarqa – Al-Zahra District – Building 12'
-      ],
-      orders: [
-        {
-          orderNumber: 'ORD-1005',
-          orderDate: '2025-04-10',
-          totalPrice: 120.0,
-          status: 'Delivered',
-          deliveryDate: '2025-04-12'
-        },
-        {
-          orderNumber: 'ORD-1020',
-          orderDate: '2025-04-15',
-          totalPrice: 75.0,
-          status: 'New',
-          deliveryDate: '2025-04-18'
-        }
-      ]
-    }
-  ];
+export class CustomerManagementComponent implements OnInit {
+  customers: User[] = [];
+  selectedCustomer: User | null = null;
 
-  selectedCustomer: Customer | null = null;
+  constructor(private userService: UserService) {}
 
-  openCustomerModal(customer: Customer) {
-    this.selectedCustomer = customer;
+  ngOnInit(): void {
+    this.loadCustomers();
+  }
+
+  private loadCustomers() {
+    this.userService.getAllUsers().subscribe({
+      next: users => {
+        // فلترة لإظهار الزبائن فقط
+        this.customers = users.filter(u => u.roleId === 0);
+      },
+      error: err => console.error('Failed to load users', err)
+    });
+  }
+
+  openCustomerModal(c: User) {
+    this.selectedCustomer = { ...c };
   }
 
   banCustomer() {
-    console.log(`Banned: ${this.selectedCustomer?.name}`);
+    if (!this.selectedCustomer) return;
+    this.userService.banUser(this.selectedCustomer.id).subscribe({
+      next: () => {
+        this.selectedCustomer!.isActive = false;
+        const i = this.customers.findIndex(u => u.id === this.selectedCustomer!.id);
+        if (i > -1) this.customers[i].isActive = false;
+      },
+      error: err => console.error('Ban failed', err)
+    });
   }
 
   activateCustomer() {
-    console.log(`Activated: ${this.selectedCustomer?.name}`);
+    if (!this.selectedCustomer) return;
+    this.userService.activateUser(this.selectedCustomer.id).subscribe({
+      next: () => {
+        this.selectedCustomer!.isActive = true;
+        const i = this.customers.findIndex(u => u.id === this.selectedCustomer!.id);
+        if (i > -1) this.customers[i].isActive = true;
+      },
+      error: err => console.error('Activate failed', err)
+    });
   }
 }
