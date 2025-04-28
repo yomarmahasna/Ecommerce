@@ -56,7 +56,7 @@ export class SignupComponent implements OnInit {
       creationDate:     new Date().toISOString(),
       email,
       password,
-      roleId:           0,
+      roleId:           1,
       phone,
       address:          '',
       customerStatusId: 0

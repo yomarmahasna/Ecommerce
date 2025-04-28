@@ -36,15 +36,27 @@ export class LoginComponent implements OnInit {
     }
 
     this.authService.login(payload).subscribe({
-      next: (res: string) => {
-        // احفظ التوكن ووجّه المستخدم
-        localStorage.setItem('token', res);
-        this.router.navigate(['/home']);
-        console.log("successed")
+      next: (jwt: string) => {
+        // 1. احفظ التوكن
+        localStorage.setItem('token', jwt);
+
+        // 2. اعرف دور المستخدم
+        const role = this.authService.getUserRole();
+
+        // 3. وجهه حسب الدور
+        if (role === 'Admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (role === 'Customer') {
+          this.router.navigate(['/customer/home']);
+        } else {
+          // حالة غير متوقعة
+          console.warn('Unknown role:', role);
+          this.router.navigate(['/login']);
+        }
       },
-      // error: (e) => {
-      //   alert(e);
-      // }
+      error: (e) => {
+        alert('Login failed: ' + e);
+      }
     });
   }
   }

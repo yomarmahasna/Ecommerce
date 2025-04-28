@@ -1,0 +1,23 @@
+<!-- categories-overview.component.html -->
+<div class="container my-5">
+  <h2 class="mb-4 text-center">All Categories</h2>
+  <div class="row g-4">
+    <div class="col-md-4" *ngFor="let cat of categories">
+      <a [routerLink]="['/customer/category', cat.id]" class="text-decoration-none">
+        <div class="card h-100 hover-shadow">
+          <!-- لو عندك صورة لكل تصنيف: -->
+          <!-- <img [src]="cat.imageUrl" class="card-img-top" alt="{{cat.nameEn}}"> -->
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ cat.name }}</h5>
+            <p class="card-text text-muted">{{ cat.descriptionEn }}</p>
+            <div class="mt-auto">
+              <button class="btn btn-primary w-100"[routerLink]="['/customer/category', cat.id]">View Products</button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+  
+

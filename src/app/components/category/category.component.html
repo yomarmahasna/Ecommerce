@@ -1,92 +1,76 @@
-
-<app-navbar></app-navbar>
-<!-- src/app/category/category.component.html -->
-<div class="container py-4">
-  <!-- 1. Category header -->
-  <div class="mb-4">
-    <h2>{{ categoryName }}</h2>
+<!-- category-page.component.html -->
+<div class="container my-5">
+  <!-- عنوان ووصف التصنيف -->
+  <div class="mb-4 text-center">
+    <h2 class="fw-bold">{{ categoryName }}</h2>
     <p class="text-muted">{{ categoryDescription }}</p>
   </div>
 
   <div class="row">
-    <!-- Filters Sidebar -->
-    <aside class="col-lg-3 col-md-4 mb-4">
-      <form [formGroup]="filterForm">
-        <h5>Filters</h5>
-        <div class="mb-3">
-          <label class="form-label"><strong>Brand</strong></label>
-          <div *ngFor="let b of brands" class="form-check">
-            <input class="form-check-input"
-                   type="checkbox"
-                   [formControlName]="b"
-                   formGroupName="brands"
-                   [id]="b" />
-            <label class="form-check-label" [for]="b">{{ b }}</label>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label"><strong>Price Range ($)</strong></label>
-          <div class="d-flex">
-            <input type="number" class="form-control me-2" formControlName="priceMin" placeholder="Min">
-            <input type="number" class="form-control"     formControlName="priceMax" placeholder="Max">
-          </div>
-        </div>
-        <button type="button" class="btn btn-primary w-100" (click)="applyAll()">Apply</button>
-      </form>
+    <!-- عمود الفلترة والفرز -->
+    <aside class="col-lg-3 mb-4">
+      <div class="card p-3">
+        <h5 class="mb-3">Filter by Brand</h5>
+        <select
+          class="form-select mb-4"
+          [(ngModel)]="selectedBrand"
+          (change)="applyBrand()"
+        >
+          <option *ngFor="let b of brands" [value]="b">{{ b }}</option>
+        </select>
+
+        <h5 class="mb-3">Sort</h5>
+        <select
+          class="form-select"
+          [(ngModel)]="selectedSort"
+          (change)="applySort()"
+        >
+          <option *ngFor="let opt of sortOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
     </aside>
 
-    <!-- Main Content -->
-    <section class="col-lg-9 col-md-8">
-      <!-- Sorting & page-size -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="d-flex align-items-center">
-          <label class="me-2 mb-0">Show</label>
-          <select class="form-select w-auto me-3"
-                  (change)="onPageSizeChange($any($event.target).value)">
-            <option *ngFor="let s of pageSizes" [value]="s">{{ s }} per page</option>
-          </select>
-
-          <label class="me-2 mb-0">Sort by:</label>
-          <select class="form-select w-auto"
-                  (change)="onSortChange($any($event.target).value)">
-            <option value="" disabled selected>– select –</option>
-            <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- 2. Product listings -->
-      <div class="row g-3">
-        <div class="col-6 col-md-4 col-lg-3" *ngFor="let p of displayedProducts">
+    <!-- عمود عرض المنتجات -->
+    <section class="col-lg-9">
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let p of products">
           <div class="card h-100">
-            <img [src]="p.imageUrl"
-                 class="card-img-top"
-                 [alt]="p.name"
-                 loading="lazy">
+            <img
+              [src]="p.imageUrl"
+              [alt]="p.name"
+              class="card-img-top"
+            />
             <div class="card-body d-flex flex-column">
               <h6 class="card-title">{{ p.name }}</h6>
-              <p class="mt-auto fw-bold">\${{ p.price }}</p>
+              <p class="mt-auto fw-bold">{{ p.price | currency:'USD' }}</p>
             </div>
           </div>
         </div>
-        <div *ngIf="!filteredProducts.length" class="text-center py-4">
-          No products found.
-        </div>
       </div>
 
-      <!-- 4. Pagination -->
-      <nav *ngIf="totalPages > 1" aria-label="Page navigation" class="mt-4">
+      <!-- Pagination -->
+      <nav class="mt-4">
         <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentPage===1">
-            <a class="page-link" (click)="goToPage(currentPage-1)">Previous</a>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">
+              Previous
+            </button>
           </li>
-          <li class="page-item"
-              *ngFor="let p of [].constructor(totalPages); let i=index"
-              [class.active]="currentPage===i+1">
-            <a class="page-link" (click)="goToPage(i+1)">{{ i+1 }}</a>
+          <li
+            class="page-item"
+            *ngFor="let _ of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1"
+          >
+            <button class="page-link" (click)="goToPage(i + 1)">
+              {{ i + 1 }}
+            </button>
           </li>
-          <li class="page-item" [class.disabled]="currentPage===totalPages">
-            <a class="page-link" (click)="goToPage(currentPage+1)">Next</a>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">
+              Next
+            </button>
           </li>
         </ul>
       </nav>

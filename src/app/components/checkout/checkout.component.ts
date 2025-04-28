@@ -13,7 +13,7 @@ import { AuthService } from '../../core/service/auth.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
@@ -109,9 +109,10 @@ export class CheckoutComponent implements OnInit {
     ).subscribe({
       next: () => {
         console.log(`Order #${orderNumber} placed successfully!`);
+        window.alert(` placed successfully # ${orderNumber}`);
         localStorage.removeItem('cartState');
         this.cartService.countOfCart.next(0);
-        this.router.navigate(['/']);
+        this.router.navigate(['customer/home']);
       },
       error: err => {
         console.error('Error creating order or details', err);
@@ -120,6 +121,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   returnToCart(): void {
-    this.router.navigate(['/shopping-cart']);
+    this.router.navigate(['customer/shopping-cart']);
   }
 }

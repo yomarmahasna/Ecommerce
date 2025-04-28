@@ -1,5 +1,4 @@
 
-<app-navbar></app-navbar>
 
 <!-- Hero Banner -->
 <section class="hero-banner d-flex align-items-center">
@@ -25,7 +24,7 @@
             <div class="mt-auto">
               <h6 class="fw-bold">${{product.price}}</h6>
               <button class="btn btn-primary w-100 mt-2"
-                [routerLink]="['/product', product.id]">View Details</button>
+                [routerLink]="['/customer/product', product.id]">View Details</button>
             </div>
           </div>
         </div>
@@ -35,4 +34,3 @@
   </div>
 </section>
 
-<app-footer></app-footer>

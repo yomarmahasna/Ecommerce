@@ -6,7 +6,7 @@ import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router'
   selector: 'app-navbar',
   standalone: true,
   imports: [RouterLink,    RouterModule,   // for routerLink
-    FormsModule,RouterOutlet],
+    FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

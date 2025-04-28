@@ -8,6 +8,8 @@ import { LoginDto, LoginResponse, RegisterDto } from '../interfaces/http';
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'token';
+  private tokenKey = 'token';
+
 
   constructor(private _httpClient: HttpClient) {}
     baseUrl = 'https://localhost:44378/api/User';
@@ -28,29 +30,33 @@ export class AuthService {
     return this._httpClient.post(`https://e-commerce-serverside.vercel.app/api/users/logout`, {});
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
+/** يقرأ الـ JWT من localStorage ويعيده */
+getToken(): string | null {
+  return localStorage.getItem(this.TOKEN_KEY);
+}
 
-  /**
-   * يفك تشفير جزء الـ payload من JWT
-   * ويعيده ككائن JSON
-   */
-  private decodePayload(): any | null {
-    const token = this.getToken();
-    if (!token) return null;
-
-    try {
-      // نحصل على الجزء الأوسط من التوكن (payload)
-      const payloadBase64 = token.split('.')[1];
-      // نحول من Base64 إلى نص
-      const payloadJson   = atob(payloadBase64);
-      // نعيد النص ككائن JSON
-      return JSON.parse(payloadJson);
-    } catch {
-      return null;
-    }
+/** يفك تشفير الـ payload من JWT ويعيده كـ JSON */
+private decodePayload(): any | null {
+  const token = this.getToken();
+  if (!token) return null;
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
   }
+}
+
+/** يقرأ حقل الـ role من الـ payload */
+getUserRole(): string | null {
+  return this.decodePayload()?.role ?? null;
+}
+
+/** يتحقق من وجود التوكن وصلاحيته بناءً على الـ exp */
+isLoggedIn(): boolean {
+  const payload = this.decodePayload();
+  if (!payload?.exp) return false;
+  return Math.floor(Date.now() / 1000) < payload.exp;
+}
 
   /**
    * يستخرج الـ customerId (هنا PersonId) من الـ payload

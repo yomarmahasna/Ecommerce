@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">MyShop</a>
+    <a class="navbar-brand" routerLink="/customer/home">MyShop</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,7 +8,7 @@
       <ul class="navbar-nav ms-auto">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
           <div class="container">
-            <a class="navbar-brand" routerLink="/">MyShop</a>
+            <a class="navbar-brand" routerLink="/customer/home">MyShop</a>
             <button class="navbar-toggler" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav">
@@ -39,26 +39,26 @@
             </div>
           </div>
         </nav>
-        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/Category">Categories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/customer/home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/customer/category">Categories</a></li>
+        <li class="nav-item"><a class="nav-link" href="/customer/home">Products</a></li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/support'">Contact Us</a>
+          <a class="nav-link" [routerLink]="'/customer/support'">Contact Us</a>
         </li>        <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/about'">About Us</a>
+          <a class="nav-link" [routerLink]="'/customer/about'">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/shopping-cart" title="Shop by Category">
+          <a class="nav-link" routerLink="/customer/shopping-cart" title="Shop by Category">
             <i class="bi bi-cart4"></i> Cart
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/wishlist" title="Wishlist">
+          <a class="nav-link" routerLink="/customer/wishlist" title="Wishlist">
             <i class="bi bi-heart"></i> Wishlist
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/profile" title="My Profile">
+          <a class="nav-link" routerLink="/customer/profile" title="My Profile">
             <i class="bi bi-person-circle"></i> Profile
           </a>
         </li>

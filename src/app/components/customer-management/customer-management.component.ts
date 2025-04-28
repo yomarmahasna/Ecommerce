@@ -11,7 +11,6 @@ import { UserService } from '../../core/service/user.service';
   imports: [
     CommonModule,
     HttpClientModule,
-    AdminNavbarComponent
   ],
   templateUrl: './customer-management.component.html'
 })

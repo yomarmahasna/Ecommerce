@@ -10,7 +10,7 @@ import { MyProduct } from '../../core/interfaces/http';
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.css']
 })
@@ -88,6 +88,6 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   checkout(): void {
-    this.router.navigate(['/checkout']);
+    this.router.navigate(['/customer/checkout']);
   }
 }

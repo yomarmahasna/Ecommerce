@@ -14,7 +14,9 @@ export class CategoryService {
   getAll(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.baseUrl}/GetAllCategory`);
   }
-
+  getCategoryById(id: number): Observable<CategoryDto> {
+    return this.http.get<CategoryDto>(`${this.baseUrl}/GetCategoryById/${id}`);
+  }
   create(dto: CategoryDto): Observable<Category> {
     return this.http.post<Category>(`${this.baseUrl}/CreateCategory`, dto);
   }

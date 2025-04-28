@@ -47,7 +47,7 @@ export interface Product {
   taxPercentage: number;
   category: string;
   brand: string;
-  images: string[]; // URLs أو أسماء ملفات
+  imageUrl: string; // URLs أو أسماء ملفات
   isAvailable: boolean;
   // lastModifiedDate: string;
   // lastModifiedBy: string;

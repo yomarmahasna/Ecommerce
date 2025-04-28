@@ -1,3 +1,4 @@
+import { CartService } from './../../core/service/cart.service';
 import { WishlistService } from './../../core/service/wishlist.service';
 import { ProductsService } from './../../core/service/products.service';
 import { Component, OnInit } from '@angular/core';
@@ -7,12 +8,11 @@ import { FooterComponent } from '../shared/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MyProduct } from '../../core/interfaces/http';
-import { CartService } from '../../core/service/cart.service';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-details.component.html',
 })
 export class ProductDetailsComponent implements OnInit {
@@ -47,9 +47,10 @@ export class ProductDetailsComponent implements OnInit {
       this.wishlistService.addToWishlist(product);
       this.addedToWishlist = true;
     } else {
-      this.router.navigate(['/wishlist']);
+      this.router.navigate(['/customer/wishlist']);
     }
   }
+
   getProductDetails(id: string): void {
     this.ProductsService.getDetails(id).subscribe({
       next: (res) => {
