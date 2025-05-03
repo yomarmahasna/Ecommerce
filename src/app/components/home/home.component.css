@@ -32,3 +32,27 @@
   box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
+
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 25vh;           /* adjust to taste */
+  overflow: hidden;
+}
+
+.hero-carousel .carousel-item img {
+  object-fit: cover;      /* ensure image covers the full area */
+  width: 100%;
+  height: 100%;
+}
+
+.hero-carousel .carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.hero-carousel {
+  height: 33vh;
+
+}

@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { RouterModule } from '@angular/router';
+import { CategoryDto } from '../../core/interfaces/http';
+import { CategoryService } from '../../core/service/category.service';
+
 
 @Component({
   selector: 'app-home',
@@ -12,11 +15,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-
-  categories = ['Electronics', 'Fashion', 'Home & Kitchen', 'Beauty'];
+  categories: CategoryDto[] = [];
   products: any[] = [];
 
-  constructor(private productService: ProductsService) {}
+  constructor(private productService: ProductsService ,private category: CategoryService) {}
 
   ngOnInit(): void {
 
@@ -30,6 +32,9 @@ export class HomeComponent implements OnInit {
       error: (err) => {
         console.log('Error fetching products:', err);
       }
+    });
+    this.category.getAll().subscribe(data => {
+      this.categories = data;
     });
   }
 

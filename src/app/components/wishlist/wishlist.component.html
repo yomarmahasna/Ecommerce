@@ -26,9 +26,22 @@
           </td>
         </tr>
       </tbody>
+      
     </table>
   </div>
+  
   <ng-template #emptyWishlist>
-    <p>Your wishlist is empty.</p>
+    <div class="container mt-5 ">
+      <div class="row">
+          <div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">
+              <img src="https://codescandy.com/coach/rtl/assets/images/bag.svg" alt="" class="img-fluid mb-4">
+              <h2>Your Wishlist is empty</h2>
+              <p class="mb-4">
+                  Keep Shopping!
+              </p>
+              <button class="btn btn-secondary me-2" (click)="continueShopping()">Continue Shopping</button>
+            </div>
+      </div>
+  </div>
   </ng-template>
 </form>

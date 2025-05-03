@@ -95,12 +95,12 @@ export class CheckoutComponent implements OnInit {
       switchMap(createdOrder => {
         const orderId = createdOrder.id;
         const detailDTOs: OrderDetailDto[] = this.cartItems.map(item => ({
-          name: item.name,
+          name: item.name || "   ",
           isActive: true,
-          creationDate: new Date().toISOString().slice(0, -1),
+          creationDate: new Date().toISOString(),
           orderId,
           productId: item.id,
-          unitPrice: item.price,
+          unitPrice: item.price|| 0.00,
           quantity: item.quantity || 1,
           netPrice: item.price * (item.quantity || 1)
         }));

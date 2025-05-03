@@ -94,6 +94,6 @@ export class WishlistComponent implements OnInit {
 
 
   continueShopping(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/customer/home']);
   }
 }

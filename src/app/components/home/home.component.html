@@ -1,14 +1,53 @@
-
-
-<!-- Hero Banner -->
-<section class="hero-banner d-flex align-items-center">
-  <div class="hero-overlay"></div>
-  <div class="container hero-content">
-    <h1 class="display-4 fw-bold">Mega Sale</h1>
-    <p class="lead">Special discounts on the latest products</p>
-    <a routerLink="#" class="btn btn-primary btn-lg">Shop Now</a>
+<!-- Hero Carousel (simplified) -->
+<div *ngIf="products.length" class="carousel slide hero-carousel" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div
+      *ngFor="let p of products | slice:0:13; let i = index"
+      class="carousel-item"
+      [class.active]="i === 0"
+    >
+      <img [src]="p.imageUrl" class="d-block w-100" [alt]="p.name">
+      <div class="carousel-caption">
+        <h5>{{ p.name }}</h5>
+        <a [routerLink]="['/customer/product', p.id]" class="btn btn-sm btn-light">
+          View Details
+        </a>
+      </div>
+    </div>
   </div>
-</section>
+  <!-- --------------------------------------------------------------------------------------------- -->
+<!-- categories-overview.component.html -->
+<div class="container my-5">
+  <h2 class="mb-4 text-center">All Categories</h2>
+  <div class="row g-4">
+    <div class="col-md-4" *ngFor="let cat of categories">
+      <a [routerLink]="['/customer/category', cat.id]" class="text-decoration-none">
+        <div class="card h-100 hover-shadow card-custom">
+          <!-- <img [src]="cat.imageUrl" class="card-img-top" alt="{{cat.name}}"> -->
+          <div class="card-body d-flex flex-column card-custom">
+            <h5 class="card-title">{{ cat.name }}</h5>
+            <p class="card-text text-muted">{{ cat.descriptionEn }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+  <!-- --------------------------------------------------------------------------------------------- -->
+
+  <!-- Prev/Next controls only -->
+  <button class="carousel-control-prev" type="button" data-bs-target=".hero-carousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target=".hero-carousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- Fallback before data loads -->
+<div *ngIf="!products.length" class="hero-carousel d-flex align-items-center justify-content-center">
+  Loading…
+</div>
 
 <!-- Popular Products -->
 <section class="py-5">

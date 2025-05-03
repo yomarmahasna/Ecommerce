@@ -298,3 +298,11 @@ export interface ProductDto {
   availabilityStatusId : number,
   imageUrl: string;
 }
+export interface ProductReview {
+  creationDate: string;
+  productId: number;
+  customerId: number;
+  rating: number;
+  comment: string;
+}
+

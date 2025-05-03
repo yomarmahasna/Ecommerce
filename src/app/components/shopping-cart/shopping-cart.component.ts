@@ -84,7 +84,7 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   continueShopping(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/customer/home']);
   }
 
   checkout(): void {

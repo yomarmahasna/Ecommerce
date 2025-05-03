@@ -18,7 +18,7 @@ import { CategoryService } from '../../core/service/category.service';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AdminNavbarComponent
+    
   ],
   templateUrl: './category-management.component.html'
 })

@@ -13,7 +13,7 @@ export class ProductsService {
     return this._httpClient.get(`https://localhost:44378/api/Product/GetAllProduct`);
   }
 
-  getDetails(id: string): Observable<any> {
+  getDetails(id: number): Observable<any> {
     return this._httpClient.get(`https://localhost:44378/api/Product/GetProductById/${id}`);
   }
 
