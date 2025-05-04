@@ -74,12 +74,13 @@ export class CategoryComponent implements OnInit {
         this.updateDisplay();
         console.log(this.allProducts)
       });
-
     // 4. جلب كل الماركات لبناء قائمة الفلترة
-    this.brand.getAllBrand()
-      .subscribe(bs => {
-        this.brandList = bs;
-        this.brands    = ['All', ...bs.map(b => b.name)];
+    this.brand.getByCategory(categoryId)
+    .subscribe(bs => {
+      console.log(categoryId)
+      console.log(`brand is :${bs.map(b =>b.name)}`)
+      this.brandList = bs;
+      this.brands = ['All', ...bs.map(b => b.name)];
       });
   }
 

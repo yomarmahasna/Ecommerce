@@ -51,6 +51,9 @@ export class BrandService {
   deactivateBrand(id: number): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/DeactivateBrand/${id}`, {});
   }
+  getByCategory(categoryId: number): Observable<Brand[]> {
+    return this.http.get<Brand[]>(`${this.baseUrl}/GetBrandByCategory/${categoryId}`);
+  }
 }
 
 
