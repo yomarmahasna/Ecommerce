@@ -6,6 +6,7 @@ import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
 import { time } from 'node:console';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { DataTableComponent } from '../shared/data-table/data-table.component';
 
 @Component({
   selector: 'app-brand-management',
@@ -16,7 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    AdminNavbarComponent]
+    DataTableComponent
+    ]
 })
 export class BrandManagementComponent implements OnInit {
   brands: Brand[] = [];

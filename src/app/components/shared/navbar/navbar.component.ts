@@ -18,7 +18,7 @@ export class NavbarComponent {
   onSearch() {
     // navigate to /searchresults?q=whatever
     this.router.navigate(
-      ['/sr'],
+      ['/customer/search'],
       { queryParams: { q: this.searchTerm.trim() } }
     );
   }
