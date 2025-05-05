@@ -1,5 +1,5 @@
 import { ProductsService } from './../../core/service/products.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
@@ -12,6 +12,8 @@ import { CategoryService } from '../../core/service/category.service';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, NavbarComponent, FooterComponent,RouterModule],
+  encapsulation: ViewEncapsulation.None ,
+
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {

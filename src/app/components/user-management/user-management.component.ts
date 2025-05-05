@@ -26,7 +26,6 @@ import { UserService } from '../../core/service/user.service';
     ReactiveFormsModule,
     RouterModule,
     HttpClientModule,
-    AdminNavbarComponent
   ],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']

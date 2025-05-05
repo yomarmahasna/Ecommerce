@@ -18,7 +18,7 @@ import { CategoryService } from '../../core/service/category.service';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    
+
   ],
   templateUrl: './category-management.component.html'
 })
@@ -39,8 +39,8 @@ export class CategoryManagementComponent implements OnInit {
 
   private initForm() {
     this.categoryForm = this.fb.group({
-      nameEn: ['', Validators.required],
-      nameAr: ['', Validators.required],
+      name: ['', Validators.required],
+      nameAR: ['', Validators.required],
       descriptionEn: [''],
       descriptionAr: [''],
       imageUrl: [''],
@@ -61,6 +61,9 @@ export class CategoryManagementComponent implements OnInit {
   }
 
   selectCategoryForEdit(cat: Category) {
+    console.log(`selected cate is ${cat.id}`)
+    console.log(`selected cate is ${cat.name}`)
+    console.log(`selected img is ${cat.imageUrl}`)
     this.selectedCategory = cat;
     this.categoryForm.patchValue({ ...cat });
   }
@@ -72,23 +75,22 @@ export class CategoryManagementComponent implements OnInit {
 
     const dto: CategoryDto = {
       id: this.selectedCategory ? this.selectedCategory.id : 0,
-      name: f.nameEn,
+      name: f.name,
       isActive: f.isActive,
-      creationDate: this.selectedCategory
-        ? this.selectedCategory.creationDate
-        : new Date().toISOString(),
-      nameAR: f.nameAr,
+      creationDate: new Date().toISOString(),
+      nameAR: f.nameAR,
       descriptionEn: f.descriptionEn,
       descriptionAr: f.descriptionAr,
-      imageUrl: f.imageUrl || '  '
+      imageUrl: f.imageUrl || "  "
     };
 
     if (this.selectedCategory) {
       // Update
       this.categoryService.update(dto.id, dto).subscribe({
         next: updated => {
-          const i = this.categories.findIndex(c => c.id === updated.id);
-          if (i > -1) this.categories[i] = updated;
+          console.log(`updated.id is ${dto.id}`)
+          // const i = this.categories.findIndex(c => c.id === updated.id);
+          // if (i > -1) this.categories[i] = updated;
           this.closeModal();
         },
         error: err => console.error('Update failed', err)

@@ -9,8 +9,10 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 
 import { AdminNavbarComponent } from '../admin-navbar/admin-navbar.component';
-import { Product, ProductDto } from '../../core/interfaces/http';
+import { Brand, Category, Product, ProductDto } from '../../core/interfaces/http';
 import { ProductsService } from '../../core/service/products.service';
+import { CategoryService } from '../../core/service/category.service';
+import { BrandService } from '../../core/service/brand.service';
 
 @Component({
   selector: 'app-product-management',
@@ -19,50 +21,58 @@ import { ProductsService } from '../../core/service/products.service';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AdminNavbarComponent
   ],
   templateUrl: './product-management.component.html'
 })
 export class ProductManagementComponent implements OnInit {
   products: Product[] = [];
   productForm!: FormGroup;
+  categories: Category[] = [];
+  brands: Brand[] = [];
+
   selectedProduct: Product | null = null;
 
-  // replace these with real loads from CategoryService/BrandService if you like
-  categories = [
-    { id: 1, name: 'Electronics' },
-    { id: 2, name: 'Books' },
-    { id: 3, name: 'Fashion' }
-  ];
-  brands = [
-    { id: 1, name: 'Samsung' },
-    { id: 2, name: 'Apple' },
-    { id: 3, name: 'Sony' }
-  ];
-/** Returns the display name of a category by its ID */
-getCategoryName(id: number): string {
-  const c = this.categories.find(x => x.id === id);
-  return c ? c.name : '—';
-}
 
-/** Returns the display name of a brand by its ID */
-getBrandName(id: number): string {
-  const b = this.brands.find(x => x.id === id);
-  return b ? b.name : '—';
-}
+  getCategoryName(id: number): string {
+    const c = this.categories.find(x => x.id === id);
+    return c ? c.name : '—';
+  }
+
+  getBrandName(id: number): string {
+    const b = this.brands.find(x => x.id === id);
+    return b ? b.name : '—';
+  }
+
   constructor(
     private fb: FormBuilder,
-    private svc: ProductsService
+    private svc: ProductsService,
+    private categorySvc: CategoryService,
+    private brandSvc: BrandService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadAll();
+    this.loadCategories();
+    this.loadBrands();
   }
 
+  private loadCategories() {
+    this.categorySvc.getAll().subscribe({
+      next: cats => this.categories = cats,
+      error: e => console.error('Failed to load categories', e)
+    });
+  }
+
+  private loadBrands() {
+    this.brandSvc.getAllBrand().subscribe({
+      next: bs => this.brands = bs,
+      error: e => console.error('Failed to load brands', e)
+    });
+  }
   private initForm() {
     this.productForm = this.fb.group({
-      nameEn: ['', Validators.required],
+      name: ['', Validators.required],
       nameAr: ['', Validators.required],
       descriptionEn: [''],
       descriptionAr: [''],
@@ -70,7 +80,7 @@ getBrandName(id: number): string {
       taxPercentage: [0],
       categoryId: [null, Validators.required],
       brandId:    [null, Validators.required],
-      images:     [[]],
+      imageUrl: [''],
       availabilityStatusId: [1]
     });
   }
@@ -87,7 +97,9 @@ getBrandName(id: number): string {
       this.selectedProduct = p;
       this.productForm.patchValue({
         ...p,
-        images: p.images,
+        nameAr: p.nameAr,
+        descriptionAr :p.descriptionAr,
+        images: p.imageUrl,
         availabilityStatusId: p.availabilityStatusId
       });
     } else {
@@ -102,7 +114,7 @@ getBrandName(id: number): string {
     const f = this.productForm.value;
     const dto: ProductDto = {
       id: 0,           // overwritten below for update
-      name: f.nameEn,
+      name: f.name,
       nameAr: f.nameAr,
       descriptionEn: f.descriptionEn,
       descriptionAr: f.descriptionAr,
@@ -113,15 +125,14 @@ getBrandName(id: number): string {
       brandId: f.brandId,
       isActive: true,
       availabilityStatusId :1,
-      imageUrl: f.images || "    "
+      imageUrl: f.imageUrl
     };
 
     if (this.selectedProduct) {
       dto.id = this.selectedProduct.id;
       this.svc.update(dto.id, dto).subscribe({
         next: updated => {
-          const i = this.products.findIndex(x => x.id === updated.id);
-          if (i > -1) this.products[i] = updated;
+
           this.closeModal();
         },
         error: e => console.error(e)

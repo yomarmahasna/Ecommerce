@@ -165,6 +165,8 @@ export interface UpdateUserDto {
   nameAr: string;
   imageUrl?: string;
   isActive: boolean;
+  categoryId: number,
+
   creationDate: string;
 }
 
@@ -225,6 +227,8 @@ export interface OrderManagment {
   shippingCity: string;
   shippingStreet: string;
   shippingBuildingNumber: string;
+  items?: OrderDetailDto[];
+
 
   customerId: number;
   rating: number;
@@ -232,12 +236,6 @@ export interface OrderManagment {
   // الخاصية status نصيّة فقط للعرض في الـ UI
   status?: string;
   // لو تحتاج تعرض تفاصيل الأصناف بعد جلبها من باك-إند
-  items?: {
-    productName: string;
-    unitPrice: number;
-    quantity: number;
-    netPrice: number;
-  }[];
 //عشان اقدر اشبك اليوز مع الاوردر
     customerName?: string;
     customerPhone?: string;

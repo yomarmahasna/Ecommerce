@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+.hero-carousel .carousel-item {
+  justify-content: center;  /* يوسّط أفقياً */
+  align-items: center;      /* يوسّط عمودياً */
+  height: 500px;            /* نفس الارتفاع اللي اخترته */
+  overflow: hidden;
+}
+
+.hero-carousel .carousel-item img {
+  max-height: 100%;         /* لا يتجاوز ارتفاع السلّة */
+  width: auto;              /* يحفظ نسبة العرض على الارتفاع */
+  object-fit: cover;        /* اقتصاص لتغطية الحاوية */
+  object-position: center;  /* يركّز منطقة الاقتصاص في المنتصف */
+}
+
+
+/* تطبّق على كل صور الكارد */
+.card-img-top {
+  width: 100%;          /* عرض البطاقة كاملاً */
+  height: 200px;        /* ارتفاع موحد */
+  object-fit: cover;    /* اقتطاع لملء البلوك بدون تشويه */
+  object-position: center; /* يركّز الاقتصاص من المنتصف */
+}

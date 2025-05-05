@@ -1,58 +1,15 @@
-.hero-banner {
-  background: url('https://via.placeholder.com/1920x400?text=Mega+Sale') no-repeat center center;
-  background-size: cover;
-  height: 400px;
-  position: relative;
-  color: #fff;
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding-top: 120px;
-}
-
-.card {
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid red !important;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-}
-
-
-.hero-carousel {
-  position: relative;
-  width: 100%;
-  height: 25vh;           /* adjust to taste */
+/* styles.css أو hero-carousel.component.css */
+.hero-carousel,
+.hero-carousel .carousel-inner,
+.hero-carousel .carousel-item {
+  height: 300px !important;      /* ارتفاع ثابت للكاروسيل */
+  max-height: 300px !important;  /* منعا لأي تجاوز */
   overflow: hidden;
 }
 
 .hero-carousel .carousel-item img {
-  object-fit: cover;      /* ensure image covers the full area */
-  width: 100%;
-  height: 100%;
-}
-
-.hero-carousel .carousel-caption {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
-
-.hero-carousel {
-  height: 33vh;
-
+  height: 100% !important;       /* يملأ الارتفاع */
+  width: auto !important;        /* يحافظ على نسبة العرض */
+  object-fit: cover;             /* الاقتصاص لملء الحاوية */
+  object-position: center;       /* تركيز الاقتصاص في المنتصف */
 }

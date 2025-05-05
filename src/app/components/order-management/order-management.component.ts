@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminNavbarComponent } from '../admin-navbar/admin-navbar.component';
-import { Order, OrderManagment } from '../../core/interfaces/http';
+import { Order, OrderDetailDto, OrderManagment } from '../../core/interfaces/http';
 import { OrderService } from '../../core/service/order.service';
 import { UserService } from '../../core/service/user.service';
 
@@ -19,7 +19,6 @@ import { UserService } from '../../core/service/user.service';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AdminNavbarComponent
   ],
   templateUrl: './order-management.component.html'
 })
@@ -27,7 +26,24 @@ export class OrderManagementComponent implements OnInit {
   orders: OrderManagment[] = [];
   selectedOrder: OrderManagment | null = null;
   orderForm!: FormGroup;
+  statuses = [
+    { id: 1, label: 'New',   badgeClass: 'bg-secondary' },
+    { id: 2, label: 'Confirmed', badgeClass: 'bg-info' },
+    { id: 3, label: 'Cancelled', badgeClass: 'bg-danger' },
+    { id: 4, label: 'Delivered', badgeClass: 'bg-success' }
+  ];
 
+    // الدالة التي تعيد تصنيف الحالة (label)
+    getStatusLabel(id: number): string {
+      const s = this.statuses.find(st => st.id === id);
+      return s ? s.label : 'New';
+    }
+
+    // الدالة التي تعيد كلاس البادج حسب الحالة
+    getBadgeClass(id: number): string {
+      const s = this.statuses.find(st => st.id === id);
+      return s ? s.badgeClass : 'bg-secondary';
+    }
   constructor(
     private fb: FormBuilder,
     private orderService: OrderService,
@@ -42,7 +58,6 @@ export class OrderManagementComponent implements OnInit {
   private initForm() {
     this.orderForm = this.fb.group({
       deliveryDate: [''],
-      // اختياري: لو حاب تضيف تعديل الحالة برسميّاً
       orderStatusId: ['']
     });
   }
@@ -66,18 +81,57 @@ export class OrderManagementComponent implements OnInit {
   }
 
   getTotal(order: OrderManagment): number {
-    if (!order.items) return order.totalPrice;
+    if (!order.items) return 0;
     return order.items.reduce((sum, item) => sum + item.netPrice, 0);
   }
 
+  getOrederTotal(order: OrderManagment): number {
+    if (!order.items) return order.totalPrice;
+    return order.items.reduce((sum, item) => sum + item.netPrice, 0);
+  }
   openOrderModal(order: OrderManagment) {
-    this.selectedOrder = { ...order };
     this.orderForm.patchValue({
       deliveryDate: order.deliveryDate,
       orderStatusId: order.orderStatusId
     });
-  }
 
+    this.orderService.getOrderDetails(order.id).subscribe({
+      next: details => {
+        const detailsArray = Array.isArray(details) ? details : [details];  // ✨ هذا هو الحل السريع
+
+        this.selectedOrder = {
+          ...order,
+          items: detailsArray
+        };
+      },
+      error: err => console.error('Load order details failed', err)
+    });
+
+  }
+  saveOrder() {
+    if (!this.selectedOrder) return;
+
+    // دمج القيم الجديدة من الـ form في نسخة من selectedOrder
+    const updatedOrder: OrderManagment = {
+      ...this.selectedOrder,
+      orderStatusId: this.orderForm.value.orderStatusId,
+      deliveryDate:    this.orderForm.value.deliveryDate
+    };
+
+    // استدعاء الـ endpoint مع المعرّف والكائن الكامل
+    this.orderService
+      .updateOrder(updatedOrder.id, updatedOrder)
+      .subscribe({
+        next: (orderFromServer) => {
+          // حدّث العنصر في هذه المصفوفة لتعكس التغيير فوراً في الـ UI
+          const idx = this.orders.findIndex(o => o.id === orderFromServer.id);
+          if (idx > -1) {
+            this.orders[idx] = orderFromServer;
+          }
+        },
+        error: err => console.error('Update failed', err)
+      });
+  }
   cancelOrder() {
     if (!this.selectedOrder) return;
     this.orderService.cancelOrder(this.selectedOrder.id).subscribe({

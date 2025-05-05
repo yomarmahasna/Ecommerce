@@ -1,22 +1,45 @@
 <!-- Hero Carousel (simplified) -->
-<div *ngIf="products.length" class="carousel slide hero-carousel" data-bs-ride="carousel">
+<div *ngIf="products.length"
+     class="carousel slide hero-carousel"
+     data-bs-ride="carousel">
   <div class="carousel-inner">
     <div
       *ngFor="let p of products | slice:0:13; let i = index"
       class="carousel-item"
-      [class.active]="i === 0"
-    >
-      <img [src]="p.imageUrl" class="d-block w-100" [alt]="p.name">
+      [class.active]="i === 0">
+      <img [src]="p.imageUrl"
+           class="d-block w-100"
+           [alt]="p.name">
       <div class="carousel-caption">
         <h5>{{ p.name }}</h5>
-        <a [routerLink]="['/customer/product', p.id]" class="btn btn-sm btn-light">
+        <a [routerLink]="['/customer/product', p.id]"
+           class="btn btn-sm btn-light">
           View Details
         </a>
       </div>
     </div>
   </div>
+
+
+  <!-- Prev/Next controls only -->
+  <button class="carousel-control-prev" type="button" data-bs-target=".hero-carousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target=".hero-carousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- Fallback before data loads -->
+<div *ngIf="!products.length" class="hero-carousel d-flex align-items-center justify-content-center">
+  Loading…
+</div>
+
   <!-- --------------------------------------------------------------------------------------------- -->
 <!-- categories-overview.component.html -->
+
+  <!-- --------------------------------------------------------------------------------------------- -->
+
 <div class="container my-5">
   <h2 class="mb-4 text-center">All Categories</h2>
   <div class="row g-4">
@@ -33,22 +56,6 @@
     </div>
   </div>
 </div>
-  <!-- --------------------------------------------------------------------------------------------- -->
-
-  <!-- Prev/Next controls only -->
-  <button class="carousel-control-prev" type="button" data-bs-target=".hero-carousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target=".hero-carousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </button>
-</div>
-
-<!-- Fallback before data loads -->
-<div *ngIf="!products.length" class="hero-carousel d-flex align-items-center justify-content-center">
-  Loading…
-</div>
-
 <!-- Popular Products -->
 <section class="py-5">
   <div class="container">

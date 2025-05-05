@@ -75,4 +75,10 @@ export class OrderService {
     );
   }
 
+  getOrderDetails(orderId: number): Observable<OrderDetailDto[]> {
+    return this.http.get<OrderDetailDto[]>(
+      `https://localhost:44378/api/OrderDetail/GetOrderDetailByOrderId/${orderId}`
+    );
+  }
+
 }

@@ -1,7 +1,8 @@
+import { CategoryService } from './../../core/service/category.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrandService } from '../../core/service/brand.service';
-import { Brand, CreateBrandDto, UpdateBrandDto } from '../../core/interfaces/http';
+import { Brand, Category, CreateBrandDto, UpdateBrandDto } from '../../core/interfaces/http';
 import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
 import { time } from 'node:console';
 import { CommonModule } from '@angular/common';
@@ -25,23 +26,36 @@ export class BrandManagementComponent implements OnInit {
   brandForm!: FormGroup;
   selectedBrand: Brand | null = null;
   loading = false;
-  error: string | null = null;
+  categories: Category[] = [];
 
+  error: string | null = null;
+  getCategoryName(id: number): string {
+    const c = this.categories.find(x => x.id === id);
+    return c ? c.name : '—';
+  }
   constructor(
     private fb: FormBuilder,
-    private brandService: BrandService
+    private brandService: BrandService,
+    private CategoryService:CategoryService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadBrands();
+    this.loadCategories();
   }
-
+  private loadCategories() {
+    this.CategoryService.getAll().subscribe({
+      next: cats => this.categories = cats,
+      error: e => console.error('Failed to load categories', e)
+    });
+  }
   private initForm(): void {
     this.brandForm = this.fb.group({
-      nameEn:   ['', Validators.required],
+      name:   ['', Validators.required],
       nameAr:   ['', Validators.required],
       imageUrl: [''],
+      categoryId: [null, Validators.required],
       isActive: [true]
     });
   }
@@ -82,9 +96,10 @@ export class BrandManagementComponent implements OnInit {
     if (this.selectedBrand) {
       const dto: UpdateBrandDto = {
         id:        this.selectedBrand.id,
-        name:    v.nameEn,
+        name:    v.name,
         nameAr:    v.nameAr,
         imageUrl:  v.imageUrl,
+        categoryId: v.categoryId,
         isActive:  v.isActive,
         creationDate: new Date().toISOString()
       };
@@ -101,9 +116,10 @@ export class BrandManagementComponent implements OnInit {
     } else {
       const dto: CreateBrandDto = {
         // id : v.id ,
-        name:   v.nameEn,
+        name:   v.name,
         nameAr:   v.nameAr,
         imageUrl: v.imageUrl,
+        categoryId: v.categoryId,
         isActive: v.isActive,
         creationDate: new Date().toISOString()
 
